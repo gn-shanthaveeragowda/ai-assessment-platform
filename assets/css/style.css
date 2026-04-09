@@ -1,0 +1,193 @@
+/* =========================================
+   1. GLOBAL BASE & TYPOGRAPHY
+   ========================================= */
+html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+}
+
+body {
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden; /* Prevent accidental horizontal scroll */
+}
+
+/* Premium Text Selection */
+::selection {
+    background: #818cf8; /* Indigo-400 */
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+/* =========================================
+   2. MODERN SCROLLBAR (Chrome/Safari/Edge)
+   ========================================= */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 100vh;
+    border: 2px solid transparent;
+    background-clip: content-box;
+    transition: background-color 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #94a3b8;
+}
+
+/* Dark Mode Scrollbar */
+.dark ::-webkit-scrollbar-thumb {
+    background-color: #374151;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+    background-color: #4b5563;
+}
+
+/* =========================================
+   3. ANIMATIONS (Organic & Fluid)
+   ========================================= */
+
+/* Blobs: Now with rotation for a liquid feel */
+@keyframes blob {
+    0% { transform: translate(0px, 0px) scale(1) rotate(0deg); }
+    33% { transform: translate(30px, -50px) scale(1.1) rotate(120deg); }
+    66% { transform: translate(-20px, 20px) scale(0.9) rotate(240deg); }
+    100% { transform: translate(0px, 0px) scale(1) rotate(360deg); }
+}
+
+.animate-blob {
+    animation: blob 20s infinite linear; /* Slower, smoother loop */
+    filter: blur(40px); /* Stronger blur for dream-like effect */
+}
+
+.animation-delay-2000 { animation-delay: 2s; }
+.animation-delay-4000 { animation-delay: 4s; }
+
+/* Entrance: Elastic Pop-up */
+@keyframes fade-slide-up {
+    0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.animate-entrance {
+    animation: fade-slide-up 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* Error Shake: Snappy feedback */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-4px); }
+    40% { transform: translateX(4px); }
+    60% { transform: translateX(-2px); }
+    80% { transform: translateX(2px); }
+}
+
+.animate-shake {
+    animation: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+/* =========================================
+   4. UI COMPONENTS & INPUTS
+   ========================================= */
+
+/* Input Glow - Professional Focus State */
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: #6366f1; /* Indigo-500 */
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+    transition: all 0.2s ease-out;
+}
+
+/* Card Hover Effect (Add 'group' class to cards to see this) */
+.group:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Buttons: Tactile Click Feel */
+button:active {
+    transform: scale(0.97);
+}
+
+/* Glassmorphism Utility (Optional usage) */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+.dark .glass-panel {
+    background: rgba(17, 24, 39, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* =========================================
+   5. TOAST NOTIFICATIONS
+   ========================================= */
+#toast-container {
+    position: fixed;
+    top: 1.5rem;
+    right: 1.5rem;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    pointer-events: none; /* Allows clicking content behind */
+}
+
+#toast-container > div {
+    pointer-events: auto;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    animation: fade-slide-up 0.3s ease-out forwards;
+}
+/* =========================================
+   6. STAR RATING SYSTEM (Feedback)
+   ========================================= */
+.star-rating {
+    direction: rtl; /* Right-to-left so hovering works correctly */
+    display: inline-flex;
+    gap: 0.25rem;
+}
+
+.star-rating input {
+    display: none; /* Hide the actual radio buttons */
+}
+
+.star-rating label {
+    color: #e5e7eb; /* Light Gray (Unselected) */
+    font-size: 2rem;
+    cursor: pointer;
+    transition: color 0.2s ease, transform 0.1s;
+}
+
+/* Interaction: Scale up slightly on hover */
+.star-rating label:hover {
+    transform: scale(1.1);
+}
+
+/* Highlight Logic: Color stars Gold when checked or hovered */
+.star-rating input:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: #fbbf24; /* Amber-400 (Gold) */
+    text-shadow: 0 0 10px rgba(251, 191, 36, 0.4); /* Subtle glow */
+}
+
+/* Dark Mode: Make unselected stars darker for better contrast */
+.dark .star-rating label {
+    color: #374151; /* Gray-700 */
+}
+

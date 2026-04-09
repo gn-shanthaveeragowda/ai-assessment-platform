@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { colors: { background: { light: '#f8fafc', dark: '#0f172a' } } } }
+        }
+    </script>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css?v=2">
+</head>
+<body class="h-full bg-gray-50 dark:bg-gray-900 font-sans transition-colors duration-500 overflow-hidden">
+
+    <div id="toast-container"></div>
+
+    <div id="landing-view" class="fixed inset-0 z-50 flex items-center justify-center bg-cover bg-center cursor-pointer" 
+         style="background-image: url('assets/images/bg.jpg');" onclick="enterPortal()">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm transition-all hover:bg-black/40"></div>
+        
+        <div class="relative z-10 text-center text-white animate-entrance">
+            <h1 class="text-6xl font-bold mb-4 drop-shadow-2xl">BTI Quiz Portal</h1>
+            <p class="text-xl mb-8 font-light tracking-wider">Excellence in Assessment</p>
+            <button class="px-8 py-3 bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/50 rounded-full text-lg font-semibold transition-all hover:scale-105 shadow-lg">
+                Click to Enter <i class="fas fa-arrow-right ml-2"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="main-auth" class="min-h-screen flex items-center justify-center p-4 relative hidden opacity-0 transition-opacity duration-700">
+        <div class="absolute top-0 -left-4 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob dark:opacity-30 dark:bg-purple-900"></div>
+        <div class="absolute bottom-0 right-0 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000 dark:opacity-30 dark:bg-yellow-900"></div>
+
+        <div class="relative w-full max-w-md bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 dark:border-gray-800 p-8">
+            
+            <div id="login-view">
+                <h1 class="text-3xl font-bold text-center text-gray-900 dark:text-white mb-6">Welcome Back</h1>
+                <form onsubmit="handleAuth(event, 'login')" class="space-y-4">
+                    <div>
+                        <input type="email" name="email" id="login-email" required placeholder="Email" 
+                               oninput="validateEmail(this)"
+                               class="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-colors">
+                        <p id="email-error" class="text-xs text-red-500 mt-1 hidden">Please enter a valid email address.</p>
+                    </div>
+
+                    <div class="relative">
+                        <input type="password" name="password" id="login-pass" required placeholder="Password" class="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none">
+                        <button type="button" onclick="togglePass('login-pass')" class="absolute right-3 top-3.5 text-gray-400 hover:text-blue-500">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+
+                    <div class="flex justify-end">
+                        <a href="change_password.php" class="text-sm text-blue-600 hover:underline">Forgot Password?</a>
+                    </div>
+
+                    <button type="submit" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all">Sign In</button>
+                </form>
+                <p class="text-center mt-6 text-gray-600 dark:text-gray-400">No account? <button onclick="toggleView('register')" class="text-blue-600 font-semibold">Register</button></p>
+            </div>
+
+            <div id="register-view" class="hidden">
+                <h1 class="text-2xl font-bold text-center text-gray-900 dark:text-white mb-6">Create Account</h1>
+                <form onsubmit="handleAuth(event, 'register')" class="space-y-3">
+                    <input type="text" name="name" required placeholder="Full Name" class="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:text-white outline-none">
+                    
+                    <input type="email" name="email" required placeholder="Email" oninput="validateEmail(this)" class="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:text-white outline-none">
+                    
+                    <div class="grid grid-cols-2 gap-2">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="role" value="student" class="peer sr-only" checked onchange="toggleRoleFields(this.value)">
+                            <div class="text-center py-2 rounded-lg border-2 peer-checked:border-blue-500 peer-checked:text-blue-600 dark:peer-checked:text-blue-400 text-gray-500 font-medium transition-all">Student</div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="role" value="teacher" class="peer sr-only" onchange="toggleRoleFields(this.value)">
+                            <div class="text-center py-2 rounded-lg border-2 peer-checked:border-purple-500 peer-checked:text-purple-600 dark:peer-checked:text-purple-400 text-gray-500 font-medium transition-all">Teacher</div>
+                        </label>
+                    </div>
+
+                    <div id="student-fields" class="grid grid-cols-2 gap-2 transition-all duration-300">
+                        <select name="department" class="px-4 py-2 rounded-lg bg-gray-50 dark:bg-gray-800 border dark:border-gray-700 dark:text-white outline-none">
+                            <option value="">Dept</option>
+                            <option value="CSE">CSE</option><option value="AIML">AIML</option><option value="ECE">ECE</option><option value="MECH">MECH</option><option value="CIVIL">CIVIL</option>
+                        </select>
+                        <select name="semester" class="px-4 py-2 rounded-lg bg-gray-50 dark:bg-gray-800 border dark:border-gray-700 dark:text-white outline-none">
+                            <option value="">Sem</option>
+                            <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+                            <option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option>
+                        </select>
+                    </div>
+
+                    <div id="teacher-fields" class="hidden transition-all duration-300">
+                        <input type="text" name="teacher_code" placeholder="Teacher Code" class="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-gray-800 border border-blue-300 dark:border-blue-900 dark:text-white outline-none ring-2 ring-blue-100 dark:ring-blue-900/30">
+                        <p class="text-xs text-gray-500 mt-1 ml-1">Required for teachers.</p>
+                    </div>
+
+                    <div class="relative">
+                        <input type="password" name="password" id="reg-pass" required placeholder="Password (min 6 chars)" class="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 dark:text-white outline-none">
+                        <button type="button" onclick="togglePass('reg-pass')" class="absolute right-3 top-2.5 text-gray-400 hover:text-blue-500">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    
+                    <button type="submit" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all shadow-md hover:shadow-lg">Register</button>
+                </form>
+                <p class="text-center mt-4 text-gray-600 dark:text-gray-400">Existing user? <button onclick="toggleView('login')" class="text-blue-600 font-semibold">Sign In</button></p>
+                <!-- Floating Teacher Button -->
+<div id="teacher-float-btn" 
+     class="hidden fixed bottom-6 right-6 z-50">
+    <button onclick="openTeacherDashboard()"
+        class="w-16 h-16 rounded-full bg-purple-600 hover:bg-purple-700 
+               text-white shadow-2xl flex items-center justify-center 
+               text-2xl transition-transform hover:scale-110">
+        <i class="fas fa-chalkboard-teacher"></i>
+    </button>
+</div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/app.js?v=11"></script>
+    <script>
+        function enterPortal() {
+            const landing = document.getElementById('landing-view');
+            const auth = document.getElementById('main-auth');
+            landing.classList.add('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                landing.style.display = 'none';
+                auth.classList.remove('hidden');
+                setTimeout(() => auth.classList.remove('opacity-0'), 50);
+            }, 500);
+        }
+
+        function validateEmail(input) {
+            const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            const error = document.getElementById('email-error');
+            if (!re.test(input.value) && input.value.length > 0) {
+                input.classList.add('border-red-500', 'focus:ring-red-500');
+                input.classList.remove('border-gray-200', 'focus:ring-blue-500');
+                if(error) error.classList.remove('hidden');
+            } else {
+                input.classList.remove('border-red-500', 'focus:ring-red-500');
+                input.classList.add('border-gray-200', 'focus:ring-blue-500');
+                if(error) error.classList.add('hidden');
+            }
+        }
+
+        function togglePass(id) {
+            const input = document.getElementById(id);
+            const btn = input.nextElementSibling.querySelector('i');
+            if (input.type === "password") {
+                input.type = "text";
+                btn.classList.remove('fa-eye');
+                btn.classList.add('fa-eye-slash');
+            } else {
+                input.type = "password";
+                btn.classList.remove('fa-eye-slash');
+                btn.classList.add('fa-eye');
+            }
+        }
+        
+        function toggleView(view) {
+            document.getElementById('login-view').classList.toggle('hidden', view !== 'login');
+            document.getElementById('register-view').classList.toggle('hidden', view !== 'register');
+        }
+
+        function toggleRoleFields(role) {
+            const sFields = document.getElementById('student-fields');
+            const tFields = document.getElementById('teacher-fields');
+            if (role === 'student') {
+                sFields.classList.remove('hidden');
+                tFields.classList.add('hidden');
+            } else {
+                sFields.classList.add('hidden');
+                tFields.classList.remove('hidden');
+            }
+        }
+        function openTeacherDashboard() {
+    window.location.href = "teacher_dashboard.html";
+}
+
+// Show floating button only for teacher
+document.addEventListener("DOMContentLoaded", async () => {
+    try {
+        const res = await fetch("api/auth.php?action=me");
+        const data = await res.json();
+
+        if (data.success && data.user.role === "teacher") {
+            document.getElementById("teacher-float-btn").classList.remove("hidden");
+        }
+    } catch (e) {
+        console.error("Role check failed");
+    }
+});
+
+    </script>
+</body>
+</html>
