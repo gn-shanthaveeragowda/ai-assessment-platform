@@ -40,5 +40,5 @@ Developed as a 6th Semester B.E. Computer Science Engineering project at Bangalo
 
 * **@gn-shanthaveeragowda** - Backend Logic & AI Integration
 * **@chidananda-p** - Frontend & UI/UX Development
-* **@basavaraj-holimath** - Database Design & Orchestration
+* @basavarajholimath7676-cmd - Database Design & Orchestration
 * **manoj-somayya-mathad** - Testing, QA, & Documentation
